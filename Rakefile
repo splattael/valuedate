@@ -3,10 +3,10 @@ require 'rake'
 begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
-    gem.name = "schema"
-    gem.summary = 'Schema validator. '
+    gem.name = "schema_validator"
+    gem.summary = 'Validates schema.'
     gem.email = "peter-schema@suschlik.de"
-    gem.homepage = "http://github.com/splattael/schema"
+    gem.homepage = "http://github.com/splattael/schema_validator"
     gem.authors = ["Peter Suschlik"]
 
     gem.has_rdoc = true

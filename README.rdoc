@@ -1,0 +1,57 @@
+= Schema validator
+
+Validates a schema
+
+== Usage
+
+  require 'schema_validator'
+
+  schema = Schema.new do
+    value.is_a?(String).equals("test")
+  end
+
+  schema.validate("test") # => true
+  schema.validate("fail") # => false
+  schema.validate(23) # => false
+
+  deep = Schema.new do
+    value.hash(
+      :type => value.is_a?(String),
+      :value => value.hash(
+        :src => value.is_a?(String),
+        :height => value.is_a?(Fixnum),
+        :width => value.is_a?(Fixnum)
+      )
+    )
+  end
+
+  deep.validate(
+    :type => "image",
+    :value => {
+      :src => "/bold.gif",
+      :height => 80,
+      :width => 80
+    }
+  ) # => true
+
+== Matchers
+
+Following matchers are defined:
+* is_a?(Class)
+* equals(expected)
+
+== Defining matchers
+
+  Schema.matcher(:equals) { |value, expected| value == expected }
+
+== Install
+
+  git clone ...
+  rake install
+
+== Authors
+* Peter Suschlik
+
+== TODO
+* Implement optional arguments
+* Implement and aggregate errors
