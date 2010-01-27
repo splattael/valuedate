@@ -1,10 +1,10 @@
 require 'pp'
 
-class Schema
+class SchemaValidator
 
   class Caller
     def value
-      Schema.new
+      SchemaValidator.new
     end
   end
 
@@ -54,7 +54,7 @@ class Schema
     attr_reader :matchers
 
     def validate(value, &block)
-      Schema.new(&block).validate(value)
+      self.class.new(&block).validate(value)
     end
 
     def matcher(name, &block)
@@ -69,5 +69,5 @@ class Schema
 
 end
 
-Schema.matcher(:equals) { |value, expected| value == expected }
-Schema.matcher(:is_a?) { |value, expected| value.is_a?(expected) }
+SchemaValidator.matcher(:equals) { |value, expected| value == expected }
+SchemaValidator.matcher(:is_a?) { |value, expected| value.is_a?(expected) }

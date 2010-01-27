@@ -6,7 +6,7 @@ Source[http://github.com/splattael/schema_validator] | RDoc[http://rdoc.info/pro
 
 == Usage
 
-  schema = Schema.new do
+  schema = SchemaValidator.new do
     value.is_a?(String).equals("test")
   end
 
@@ -14,7 +14,7 @@ Source[http://github.com/splattael/schema_validator] | RDoc[http://rdoc.info/pro
   schema.validate("fail") # => false
   schema.validate(23) # => false
 
-  deep = Schema.new do
+  deep = SchemaValidator.new do
     value.hash(
       :type => value.is_a?(String),
       :value => value.hash(
@@ -42,7 +42,7 @@ Following matchers are defined:
 
 == Defining matchers
 
-  Schema.matcher(:equals) { |value, expected| value == expected }
+  SchemaValidator.matcher(:equals) { |value, expected| value == expected }
 
 == Install
 

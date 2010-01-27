@@ -2,13 +2,13 @@ require 'helper'
 
 class Riot::Situation
   def v(value=nil, &block)
-    Schema.new(&block).validate(value)
+    SchemaValidator.new(&block).validate(value)
   end
 end
 
-context "Schema" do
+context "SchemaValidator" do
 
-  asserts(:class) { Schema.new }.equals(Schema)
+  asserts(:class) { SchemaValidator.new }.equals(SchemaValidator)
 
   context "empty" do
     asserts("validate") { v }
@@ -17,10 +17,10 @@ context "Schema" do
   end
 
   context "matchers" do
-    asserts("equals") { Schema.matchers[:equals].call(1, 1) }
-    asserts("!equals") { !Schema.matchers[:equals].call(1, 2) }
-    asserts("is_a?") { Schema.matchers[:is_a?].call("string", String) }
-    asserts("!is_a?") { !Schema.matchers[:is_a?].call("string", Fixnum) }
+    asserts("equals") { SchemaValidator.matchers[:equals].call(1, 1) }
+    asserts("!equals") { !SchemaValidator.matchers[:equals].call(1, 2) }
+    asserts("is_a?") { SchemaValidator.matchers[:is_a?].call("string", String) }
+    asserts("!is_a?") { !SchemaValidator.matchers[:is_a?].call("string", Fixnum) }
   end
 
   context "equals" do
@@ -45,7 +45,7 @@ context "Schema" do
 
   context "nesting" do
     setup do
-      Schema.new do
+      SchemaValidator.new do
         value.hash(
           :key    => value.is_a?(String),
           :value  => value.is_a?(Fixnum)
@@ -60,7 +60,7 @@ context "Schema" do
 
   context "deep nesting" do
     setup do
-      Schema.new do
+      SchemaValidator.new do
         value.hash(
           :image => value.hash(
             :src => value.is_a?(String),
