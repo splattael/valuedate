@@ -1,10 +1,10 @@
 = Schema validator
 
-Validates a schema
+Validates a schema.
+
+Source[http://github.com/splattael/schema_validator] | RDoc[http://rdoc.info/projects/splattael/schema_validator] | Metrics[http://getcaliper.com/caliper/project?repo=git%3A%2F%2Fgithub.com%2Fsplattael%2Fschema_validator.git]
 
 == Usage
-
-  require 'schema_validator'
 
   schema = Schema.new do
     value.is_a?(String).equals("test")
