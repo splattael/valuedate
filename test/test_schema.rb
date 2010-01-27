@@ -16,6 +16,11 @@ context "Schema" do
     asserts("validates 1") { !v(1) }
   end
 
+  context "chaining" do
+    asserts("valid") { v(1) { is_a?(Fixnum).equals(1) }}
+    asserts("invalid") { !v(1) { is_a?(Fixnum).equals(2) }}
+  end
+
   context "equals" do
     asserts("valid 1") { v(1) { equals 1 } }
     asserts("invalid 2") { !v(2) { equals 1 } }

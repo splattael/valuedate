@@ -24,5 +24,6 @@ class Schema
 
   def append(&block)
     @validators << block
+    self
   end
 end
