@@ -2,66 +2,17 @@ require 'pp'
 
 class Schema
 
-  class Validator
-    attr_reader :validators
-
-    def initialize(schema, &block)
-      @schema = schema
-      @validators = [ block ]
-    end
-
-    def method_missing(method, *args, &block)
-      @validators.concat(@schema.send(method, *args, &block).validators)
-      self
-    end
-
-    def validate(value)
-      @validators.all? do |block|
-        block.call(value)
-      end
-    end
-
-    def size
-      @validators.size
-    end
-
-    def inspect
-      "#<%s:%x @validators=%d>" % [ self.class.name, hash, size ]
+  class Caller
+    def value
+      Schema.new
     end
   end
 
-  # Schema
   attr_reader :validators
-
-  class << self
-    attr_reader :matchers
-  end
-  @matchers = {}
-
-  def self.validate(value, &block)
-    Schema.new(&block).validate(value)
-  end
 
   def initialize(&block)
     @validators = []
-    instance_eval(&block) if block
-  end
-
-  def self.matcher(name, &block)
-    @matchers[name] = proc do |value, expected|
-      result = block.call(value, expected)
-      puts "#{value.inspect} #{name} #{expected.inspect} => #{result.inspect}"
-      result
-    end
-  end
-
-  matcher(:equals) { |value, expected| value == expected }
-  matcher(:is_a?) { |value, expected| value.is_a?(expected) }
-
-  matchers.keys.each { |m| undef_method m if respond_to?(m) }
-
-  def value
-    Schema.new
+    @validators << Caller.new.instance_eval(&block) if block
   end
 
   def hash(schema={})
@@ -72,20 +23,20 @@ class Schema
     end
   end
 
-  def validate!(value = nil)
+  def validate(value = nil)
     if @validators.empty?
       value.nil?
     else
       @validators.all? do |validator|
-        validator.validate(value)
+        validator.call(value)
       end
     end
   end
+  alias call validate
 
   def valid?(&block)
-    Validator.new(self, &block).tap do |validator|
-      @validators << validator
-    end
+    @validators << block
+    self
   end
 
   def method_missing(method, *args, &block)
@@ -97,4 +48,26 @@ class Schema
       super
     end
   end
+
+  @matchers = {}
+  class << self
+    attr_reader :matchers
+
+    def validate(value, &block)
+      Schema.new(&block).validate(value)
+    end
+
+    def matcher(name, &block)
+      undef_method(name) if respond_to?(name)
+      @matchers[name] = proc do |value, expected|
+        result = block.call(value, expected)
+        puts "#{value.inspect} #{name} #{expected.inspect} => #{result.inspect}" if $DEBUG
+        result
+      end
+    end
+  end
+
 end
+
+Schema.matcher(:equals) { |value, expected| value == expected }
+Schema.matcher(:is_a?) { |value, expected| value.is_a?(expected) }
