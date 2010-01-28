@@ -169,4 +169,14 @@ context "Valuedate" do
     asserts("invalid array") { !v(0) { value.in([1,2,3]) } }
   end
 
+  context "is and not" do
+    asserts("valid Fixnum") { v(1) { value.is { |value| value == 1 } } }
+    asserts("valid not Fixnum") { v(1) { value.not { |value| value == 2 } } }
+    asserts("invalid is Fixnum") { v(1) { !value.is { |value| value == 2 } } }
+    asserts("invalid not Fixnum") { v(1) { !value.not { |value| value == 1 } } }
+
+    asserts("valid empty array") { v([]) { value.is_a(Array).is { |value| value.empty? } } }
+    asserts("valid array size") { v([1,2]) { value.is { |value| value.size == 2 } } }
+    asserts("invalid array size") { !v([1,2]) { value.not { |value| value.size == 2 } } }
+  end
 end

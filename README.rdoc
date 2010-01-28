@@ -43,7 +43,22 @@ Following matchers are defined:
 * is_a(Class)
 * equals(expected)
 * any(list of validators)
-* is(range, array or anything that responds_to #include?)
+* in(range, array or anything that responds_to #include?)
+* is { |value| boolean }
+* not { |value| boolean }
+
+=== Missing matchers?
+
+Use #is and #not:
+  schema = Valuedate.schema do
+    value.hash(
+      :array  => value.not { |value| value.empty? },
+      :rgb    => value.is { |value| value.size == 3 }
+    )
+  end
+
+  schema.validate(:array => [1], :rgb => [1,2,3]) # => true
+  schema.validate(:array => [1], :rgb => [1,2]) # => false
 
 == Defining matchers
 

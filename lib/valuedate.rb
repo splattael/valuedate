@@ -52,7 +52,7 @@ class Valuedate
 
   def method_missing(method, *args, &block)
     if matcher = Valuedate.matchers[method]
-      valid? { |value| matcher.call(value, *args) }
+      valid? { |value| matcher.call(value, *args, &block) }
     else
       super
     end
@@ -84,3 +84,5 @@ Valuedate.matcher(:any) do |value, *validators|
   validators.any? { |validator| validator.validate(value) }
 end
 Valuedate.matcher(:in) { |value, expected| expected.include?(value) }
+Valuedate.matcher(:is) { |*value, &block| block.call(*value)  }
+Valuedate.matcher(:not) { |*value, &block| !block.call(*value)  }
