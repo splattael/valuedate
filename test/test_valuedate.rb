@@ -6,16 +6,6 @@ class Riot::Situation
   end
 end
 
-class Riot::Context
-  def debug(&block)
-    old = $DEBUG
-    $DEBUG = true
-    yield
-  ensure
-    $DEBUG = old
-  end
-end
-
 context "Valuedate" do
 
   asserts(:class) { Valuedate.schema }.equals(Valuedate)

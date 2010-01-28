@@ -15,7 +15,6 @@ class Valuedate
 
   class OptionalValue < Valuedate
     def validate(value = nil)
-      puts "optional: #{value.inspect}" if $DEBUG
       value.nil? || super
     end
   end
@@ -31,9 +30,7 @@ class Valuedate
     valid? do |value|
       value ||= {}
       schema.all? do |(key, validator)|
-        result = validator.validate(value[key])
-        puts "hash[:#{key}] = #{value[key].inspect} # => #{result.inspect}" if $DEBUG
-        result
+        validator.validate(value[key])
       end
     end
   end
@@ -76,9 +73,7 @@ class Valuedate
     def matcher(name, &block)
       undef_method(name) if respond_to?(name)
       @matchers[name] = proc do |value, *expected|
-        result = block.call(value, *expected)
-        puts "#{value.inspect} #{name} #{expected.inspect} => #{result.inspect}" if $DEBUG
-        result
+        block.call(value, *expected)
       end
     end
   end
