@@ -19,7 +19,6 @@ class Valuedate
     end
   end
 
-  attr_reader :validators
 
   def initialize(&block)
     @validators = []
@@ -50,9 +49,7 @@ class Valuedate
 
   def method_missing(method, *args, &block)
     if matcher = Valuedate.matchers[method]
-      valid? do |value|
-        matcher.call(value, *args)
-      end
+      valid? { |value| matcher.call(value, *args) }
     else
       super
     end
@@ -72,9 +69,7 @@ class Valuedate
 
     def matcher(name, &block)
       undef_method(name) if respond_to?(name)
-      @matchers[name] = proc do |value, *expected|
-        block.call(value, *expected)
-      end
+      @matchers[name] = block
     end
   end
 
