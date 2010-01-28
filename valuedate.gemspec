@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{valuedate}
-  s.version = "0.0.2"
+  s.version = "0.0.3"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Peter Suschlik"]
@@ -22,7 +22,8 @@ Gem::Specification.new do |s|
      "lib/valuedate.rb",
      "test.watchr",
      "test/helper.rb",
-     "test/test_valuedate.rb"
+     "test/test_valuedate.rb",
+     "valuedate.gemspec"
   ]
   s.homepage = %q{http://github.com/splattael/valuedate}
   s.rdoc_options = ["--charset=UTF-8"]
