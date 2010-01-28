@@ -6,7 +6,7 @@ Source[http://github.com/splattael/valuedate] | RDoc[http://rdoc.info/projects/s
 
 == Usage
 
-  schema = Valuedate.new do
+  schema = Valuedate.schema do
     value.is_a(String).equals("test")
   end
 
@@ -14,7 +14,7 @@ Source[http://github.com/splattael/valuedate] | RDoc[http://rdoc.info/projects/s
   schema.validate("fail") # => false
   schema.validate(23) # => false
 
-  deep = Valuedate.new do
+  deep = Valuedate.schema do
     value.hash(
       :type => value.is_a(String),
       :value => value.hash(
