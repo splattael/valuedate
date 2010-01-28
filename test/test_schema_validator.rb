@@ -6,6 +6,16 @@ class Riot::Situation
   end
 end
 
+class Riot::Context
+  def debug(&block)
+    old = $DEBUG
+    $DEBUG = true
+    yield
+  ensure
+    $DEBUG = old
+  end
+end
+
 context "SchemaValidator" do
 
   asserts(:class) { SchemaValidator.new }.equals(SchemaValidator)
@@ -13,7 +23,7 @@ context "SchemaValidator" do
   context "empty" do
     asserts("validate") { v }
     asserts("validate nil") { v(nil) }
-    asserts("validates 1") { !v(1) }
+    asserts("validates 1") { v(1) }
   end
 
   context "matchers" do
@@ -90,5 +100,46 @@ context "SchemaValidator" do
     end
 
   end # deep nesting
+
+  context "optional_value" do
+    asserts("valid nil") { v(nil) { optional_value } }
+    asserts("valid 1") { v(1) { optional_value } }
+    asserts("valid empty optional String") { v(nil) { optional_value.is_a(String) } }
+    asserts("valid given and String") { v("test") { optional_value.is_a(String) } }
+    asserts("invalid given non-String") { !v(1) { optional_value.is_a(String) } }
+
+    context "netsted" do
+      setup do
+        SchemaValidator.new do
+          optional_value.hash(
+            :image => value.hash(
+              :src  => value.is_a(String),
+              :alt  => optional_value.is_a(String),
+              :size => optional_value.hash(
+                :width => value.is_a(Fixnum),
+                :height => value.is_a(Fixnum)
+              )
+            )
+          )
+        end
+      end
+
+      asserts("valid empty") { topic.validate }
+      asserts("invalid non Hash") { !topic.validate(23) }
+      asserts("invalid wrong key") { !topic.validate(:type => {}) }
+      asserts("invalid empty image") { !topic.validate(:image => {}) }
+      asserts("valid all given") do
+        topic.validate(
+          :image => {
+            :src  => "/img.gif",
+            :alt  => "Alt",
+            :size => { :width => 80, :height => 80 }
+          }
+        )
+      end
+      asserts("valid minimal Hash") { topic.validate(:image => { :src => "/img.gif" }) }
+      asserts("invalid alt") { !topic.validate(:image => { :src => "/img.gif", :alt => 23 }) }
+    end
+  end
 
 end

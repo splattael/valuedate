@@ -19,8 +19,8 @@ Source[http://github.com/splattael/schema_validator] | RDoc[http://rdoc.info/pro
       :type => value.is_a(String),
       :value => value.hash(
         :src => value.is_a(String),
-        :height => value.is_a(Fixnum),
-        :width => value.is_a(Fixnum)
+        :height => optional_value.is_a(Fixnum),
+        :width => optional_value.is_a(Fixnum)
       )
     )
   end
@@ -33,6 +33,9 @@ Source[http://github.com/splattael/schema_validator] | RDoc[http://rdoc.info/pro
       :width => 80
     }
   ) # => true
+
+  # :height and width are optional
+  deep.validate(:type => "image", :value => { :src => "/bold.gif" }) # => true
 
 == Matchers
 
@@ -53,5 +56,4 @@ Following matchers are defined:
 * Peter Suschlik
 
 == TODO
-* Implement optional arguments
 * Implement and aggregate errors

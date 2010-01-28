@@ -2,9 +2,23 @@ require 'pp'
 
 class SchemaValidator
 
-  class Caller
+  class Scope
     def value
-      SchemaValidator.new
+      Value.new
+    end
+
+    def optional_value
+      OptionalValue.new
+    end
+  end
+
+  class Value < SchemaValidator
+  end
+
+  class OptionalValue < SchemaValidator
+    def validate(value = nil)
+      puts "optional: #{value.inspect}" if $DEBUG
+      value.nil? || super
     end
   end
 
@@ -12,27 +26,27 @@ class SchemaValidator
 
   def initialize(&block)
     @validators = []
-    @validators << Caller.new.instance_eval(&block) if block
+    @validators << Scope.new.instance_eval(&block) if block
   end
 
   def hash(schema={})
     valid? do |value|
+      value ||= {}
       schema.all? do |(key, validator)|
-        validator.validate(value[key])
+        result = validator.validate(value[key])
+        puts "hash[:#{key}] = #{value[key].inspect} # => #{result.inspect}" if $DEBUG
+        result
       end
     end
   end
 
   def validate(value = nil)
-    if @validators.empty?
-      value.nil?
-    else
-      @validators.all? do |validator|
-        validator.call(value)
-      end
-    end
+    @validators.all? { |validator| validator.call(value) }
   end
-  alias call validate
+
+  def call(value)
+    validate(value)
+  end
 
   def valid?(&block)
     @validators << block
@@ -40,7 +54,7 @@ class SchemaValidator
   end
 
   def method_missing(method, *args, &block)
-    if matcher = self.class.matchers[method]
+    if matcher = SchemaValidator.matchers[method]
       valid? do |value|
         matcher.call(value, args.first)
       end
