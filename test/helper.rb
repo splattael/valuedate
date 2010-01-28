@@ -2,6 +2,6 @@ require 'rubygems'
 require 'riot'
 require 'riot_notifier'
 
-require 'schema_validator'
+require 'valuedate'
 
 Riot.reporter = RiotNotifier

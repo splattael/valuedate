@@ -3,10 +3,10 @@ require 'rake'
 begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
-    gem.name = "schema_validator"
-    gem.summary = 'Validates schema.'
-    gem.email = "peter-schema@suschlik.de"
-    gem.homepage = "http://github.com/splattael/schema_validator"
+    gem.name = "valuedate"
+    gem.summary = 'Validates values.'
+    gem.email = "peter-valuedate@suschlik.de"
+    gem.homepage = "http://github.com/splattael/valuedate"
     gem.authors = ["Peter Suschlik"]
 
     gem.has_rdoc = true
@@ -37,7 +37,7 @@ end
 # RDoc
 require 'rake/rdoctask'
 Rake::RDocTask.new do |rd|
-  rd.title = "Schema validations"
+  rd.title = "Valuedate"
   rd.main = "README.rdoc"
   rd.rdoc_files.include("README.rdoc", "lib/*.rb")
   rd.rdoc_dir = "doc"

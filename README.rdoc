@@ -1,12 +1,12 @@
-= Schema validator
+= Valuedate
 
-Validates a schema.
+Validates values using a schema.
 
-Source[http://github.com/splattael/schema_validator] | RDoc[http://rdoc.info/projects/splattael/schema_validator] | Metrics[http://getcaliper.com/caliper/project?repo=git%3A%2F%2Fgithub.com%2Fsplattael%2Fschema_validator.git]
+Source[http://github.com/splattael/valuedate] | RDoc[http://rdoc.info/projects/splattael/valuedate] | Metrics[http://getcaliper.com/caliper/project?repo=git%3A%2F%2Fgithub.com%2Fsplattael%2Fvaluedate.git]
 
 == Usage
 
-  schema = SchemaValidator.new do
+  schema = Valuedate.new do
     value.is_a(String).equals("test")
   end
 
@@ -14,7 +14,7 @@ Source[http://github.com/splattael/schema_validator] | RDoc[http://rdoc.info/pro
   schema.validate("fail") # => false
   schema.validate(23) # => false
 
-  deep = SchemaValidator.new do
+  deep = Valuedate.new do
     value.hash(
       :type => value.is_a(String),
       :value => value.hash(
@@ -46,7 +46,7 @@ Following matchers are defined:
 
 == Defining matchers
 
-  SchemaValidator.matcher(:equals) { |value, expected| value == expected }
+  Valuedate.matcher(:equals) { |value, expected| value == expected }
 
 == Install
 
