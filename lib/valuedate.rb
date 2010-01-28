@@ -80,3 +80,4 @@ Valuedate.matcher(:is_a) { |value, expected| value.is_a?(expected) }
 Valuedate.matcher(:any) do |value, *validators|
   validators.any? { |validator| validator.validate(value) }
 end
+Valuedate.matcher(:in) { |value, expected| expected.include?(value) }

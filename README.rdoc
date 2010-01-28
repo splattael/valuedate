@@ -43,6 +43,7 @@ Following matchers are defined:
 * is_a(Class)
 * equals(expected)
 * any(list of validators)
+* is(range, array or anything that responds_to #include?)
 
 == Defining matchers
 

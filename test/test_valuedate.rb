@@ -155,4 +155,11 @@ context "Valuedate" do
     end
   end
 
+  context "in" do
+    asserts("valid range") { v(1) { value.in(1..5) } }
+    asserts("invalid range") { !v(0) { value.in(1..5) } }
+    asserts("valid array") { v(1) { value.in([1,2,3]) } }
+    asserts("invalid array") { !v(0) { value.in([1,2,3]) } }
+  end
+
 end
