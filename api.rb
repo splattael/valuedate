@@ -6,13 +6,13 @@ Schema.define do
   hash(
     :name =>  String,
     :age  =>  Integer,
-    :roles  => optional.is_a?(Array).part_of(%w(admin user)),
-    :images => is_a?(Array).not.empty
+    :roles  => optional.is_a(Array).part_of(%w(admin user)),
+    :images => is_a(Array).not.empty
     :images => array do
       hash(
         :src => String,
         :alt => String,
-        :title => is_a?(String).optional
+        :title => is_a(String).optional
       )
     end
     :info =>  optional.hash(

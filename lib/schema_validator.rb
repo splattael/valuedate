@@ -70,4 +70,4 @@ class SchemaValidator
 end
 
 SchemaValidator.matcher(:equals) { |value, expected| value == expected }
-SchemaValidator.matcher(:is_a?) { |value, expected| value.is_a?(expected) }
+SchemaValidator.matcher(:is_a) { |value, expected| value.is_a?(expected) }

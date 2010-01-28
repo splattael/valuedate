@@ -19,8 +19,8 @@ context "SchemaValidator" do
   context "matchers" do
     asserts("equals") { SchemaValidator.matchers[:equals].call(1, 1) }
     asserts("!equals") { !SchemaValidator.matchers[:equals].call(1, 2) }
-    asserts("is_a?") { SchemaValidator.matchers[:is_a?].call("string", String) }
-    asserts("!is_a?") { !SchemaValidator.matchers[:is_a?].call("string", Fixnum) }
+    asserts("is_a") { SchemaValidator.matchers[:is_a].call("string", String) }
+    asserts("!is_a") { !SchemaValidator.matchers[:is_a].call("string", Fixnum) }
   end
 
   context "equals" do
@@ -31,24 +31,24 @@ context "SchemaValidator" do
     asserts("invalid multiple") { !v(1) { value.equals 1; value.equals 2} }
   end
 
-  context "is_a?" do
-    asserts("valid String") { v("test") { value.is_a?(String) } }
-    asserts("invalid String") { !v(1) { value.is_a?(String) } }
-    asserts("valid multiple") { v("test") { value.is_a?(String); value.is_a?(Object) } }
-    asserts("invalid multiple") { !v("test") { value.is_a?(String); value.is_a?(Fixnum) } }
+  context "is_a" do
+    asserts("valid String") { v("test") { value.is_a(String) } }
+    asserts("invalid String") { !v(1) { value.is_a(String) } }
+    asserts("valid multiple") { v("test") { value.is_a(String); value.is_a(Object) } }
+    asserts("invalid multiple") { !v("test") { value.is_a(String); value.is_a(Fixnum) } }
   end
 
   context "chaining" do
-    asserts("valid") { v(1) { value.is_a?(Fixnum).equals(1) }}
-    asserts("invalid") { !v(1) { value.is_a?(Fixnum).equals(2) }}
+    asserts("valid") { v(1) { value.is_a(Fixnum).equals(1) }}
+    asserts("invalid") { !v(1) { value.is_a(Fixnum).equals(2) }}
   end
 
   context "nesting" do
     setup do
       SchemaValidator.new do
         value.hash(
-          :key    => value.is_a?(String),
-          :value  => value.is_a?(Fixnum)
+          :key    => value.is_a(String),
+          :value  => value.is_a(Fixnum)
         )
       end
     end
@@ -63,10 +63,10 @@ context "SchemaValidator" do
       SchemaValidator.new do
         value.hash(
           :image => value.hash(
-            :src => value.is_a?(String),
-            :height => value.is_a?(Fixnum)
+            :src => value.is_a(String),
+            :height => value.is_a(Fixnum)
           ),
-          :text => value.is_a?(String)
+          :text => value.is_a(String)
         )
       end
     end

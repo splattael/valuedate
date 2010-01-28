@@ -7,7 +7,7 @@ Source[http://github.com/splattael/schema_validator] | RDoc[http://rdoc.info/pro
 == Usage
 
   schema = SchemaValidator.new do
-    value.is_a?(String).equals("test")
+    value.is_a(String).equals("test")
   end
 
   schema.validate("test") # => true
@@ -16,11 +16,11 @@ Source[http://github.com/splattael/schema_validator] | RDoc[http://rdoc.info/pro
 
   deep = SchemaValidator.new do
     value.hash(
-      :type => value.is_a?(String),
+      :type => value.is_a(String),
       :value => value.hash(
-        :src => value.is_a?(String),
-        :height => value.is_a?(Fixnum),
-        :width => value.is_a?(Fixnum)
+        :src => value.is_a(String),
+        :height => value.is_a(Fixnum),
+        :width => value.is_a(Fixnum)
       )
     )
   end
@@ -37,7 +37,7 @@ Source[http://github.com/splattael/schema_validator] | RDoc[http://rdoc.info/pro
 == Matchers
 
 Following matchers are defined:
-* is_a?(Class)
+* is_a(Class)
 * equals(expected)
 
 == Defining matchers
