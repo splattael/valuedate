@@ -56,7 +56,7 @@ class SchemaValidator
   def method_missing(method, *args, &block)
     if matcher = SchemaValidator.matchers[method]
       valid? do |value|
-        matcher.call(value, args.first)
+        matcher.call(value, *args)
       end
     else
       super
@@ -73,8 +73,8 @@ class SchemaValidator
 
     def matcher(name, &block)
       undef_method(name) if respond_to?(name)
-      @matchers[name] = proc do |value, expected|
-        result = block.call(value, expected)
+      @matchers[name] = proc do |value, *expected|
+        result = block.call(value, *expected)
         puts "#{value.inspect} #{name} #{expected.inspect} => #{result.inspect}" if $DEBUG
         result
       end
@@ -85,3 +85,6 @@ end
 
 SchemaValidator.matcher(:equals) { |value, expected| value == expected }
 SchemaValidator.matcher(:is_a) { |value, expected| value.is_a?(expected) }
+SchemaValidator.matcher(:any) do |value, *validators|
+  validators.any? { |validator| validator.validate(value) }
+end

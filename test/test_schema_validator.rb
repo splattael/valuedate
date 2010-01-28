@@ -142,4 +142,27 @@ context "SchemaValidator" do
     end
   end
 
+  context "any" do
+    asserts("valid") { v(1) { value.any(value.equals(1), value.equals(2)) } }
+    asserts("valid") { v(2) { value.any(value.equals(1), value.equals(2)) } }
+    asserts("invalid") { !v(3) { value.any(value.equals(1), value.equals(2)) } }
+
+    context "nested" do
+      setup do
+        SchemaValidator.new do
+          value.any(
+            value.hash(:result => value.equals("ok")),
+            value.hash(:error => value.equals("failed"), :init => value.equals(23))
+          )
+        end
+      end
+
+      asserts("invalid when empty") { !topic.validate }
+      asserts("valid when result ok") { topic.validate(:result => "ok") }
+      asserts("invalid when result nok") { !topic.validate(:result => "nok") }
+      asserts("valid when error") { topic.validate(:error => "failed", :init => 23) }
+      asserts("invalid missing init") { !topic.validate(:error => "failed") }
+    end
+  end
+
 end

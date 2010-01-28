@@ -42,6 +42,7 @@ Source[http://github.com/splattael/schema_validator] | RDoc[http://rdoc.info/pro
 Following matchers are defined:
 * is_a(Class)
 * equals(expected)
+* any(list of validators)
 
 == Defining matchers
 
