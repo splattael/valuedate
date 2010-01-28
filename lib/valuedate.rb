@@ -22,7 +22,10 @@ class Valuedate
 
   def initialize(&block)
     @validators = []
-    @validators << Scope.new.instance_eval(&block) if block
+    if block
+      validator = Scope.new.instance_eval(&block)
+      @validators << validator if validator.respond_to?(:call)
+    end
   end
 
   def hash(schema={})

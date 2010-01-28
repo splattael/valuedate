@@ -11,9 +11,16 @@ context "Valuedate" do
   asserts(:class) { Valuedate.schema }.equals(Valuedate)
 
   context "empty" do
-    asserts("validate") { v }
-    asserts("validate nil") { v(nil) }
-    asserts("validates 1") { v(1) }
+    asserts("valid without block") { v }
+    asserts("valid empty block") { v {} }
+    asserts("valid nil block") { v { nil } }
+    asserts("valid nil") { v(nil) }
+    asserts("valid 1") { v(1) }
+  end
+
+  context "callable" do
+    asserts("valid with true") { v { proc {|v| true } } }
+    asserts("invalid with false") { !v { proc {|v| false } } }
   end
 
   context "matchers" do
