@@ -17,4 +17,5 @@ watch('test/helper.rb')    { run_tests }
 watch('VERSION') do
   puts "Building gem"
   system "rake build"
+  git commit -m "Spec" *.gemspec
 end
