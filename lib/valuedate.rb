@@ -129,3 +129,4 @@ end
 Valuedate.matcher(:in) { |value, expected| expected.include?(value) }
 Valuedate.matcher(:is) { |*value, &block| block.call(*value)  }
 Valuedate.matcher(:not) { |*value, &block| !block.call(*value)  }
+Valuedate.matcher(:matches) { |value, expected| expected.match(value.to_s) }

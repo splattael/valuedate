@@ -196,6 +196,12 @@ context "Valuedate" do
     asserts("invalid array size") { !v([1,2]) { value.not { |value| value.size == 2 } } }
   end
 
+  context "matches" do
+    asserts("valid Regexp") { v("test me") { value.matches(%r{^test}) } }
+    asserts("invalid Regexp") { !v("fest me") { value.matches(%r{^test}) } }
+    asserts("invalid Fixnum") { !v(1) { value.matches(%r{^test}) } }
+  end
+
   # TODO refactor!
   context "errors" do
     setup do
