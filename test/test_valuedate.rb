@@ -6,6 +6,22 @@ class Riot::Situation
   end
 end
 
+class Riot::Context
+  def asserts_validation_error(options={}, &block)
+    asserts("validation_error with #{options.inspect}") do
+      begin
+        instance_eval(&block)
+        false
+      rescue Valuedate::ValidationFailed => e
+        error = e.errors.first
+        options.all? do |key, value|
+          error.options[key] == value
+        end
+      end
+    end
+  end
+end
+
 context "Valuedate" do
 
   asserts(:class) { Valuedate.schema }.equals(Valuedate)
@@ -178,5 +194,39 @@ context "Valuedate" do
     asserts("valid empty array") { v([]) { value.is_a(Array).is { |value| value.empty? } } }
     asserts("valid array size") { v([1,2]) { value.is { |value| value.size == 2 } } }
     asserts("invalid array size") { !v([1,2]) { value.not { |value| value.size == 2 } } }
+  end
+
+  context "errors" do
+    setup do
+      Valuedate.schema {}
+    end
+
+    asserts("empty") { topic.errors.empty? }
+    asserts("with error") do
+      topic.error(:value => "value")
+      topic.errors.first.options[:value]
+    end.equals("value")
+
+    context "aggregate" do
+      setup do
+        Valuedate.schema do
+          value.hash(
+            :key1 => value.is_a(String).equals("key"),
+            :key2 => value.hash(
+              :key3 => value.is_a(Fixnum)
+            )
+          )
+        end
+      end
+
+      asserts("fails") { !topic.validate({}) }
+      asserts_validation_error(:key => :key1, :matcher => :is_a) { topic.validate!({}) }
+      asserts_validation_error(:key => :key1, :matcher => :is_a) { topic.validate!(:key1 => 23) }
+      asserts_validation_error(:key => :key1, :matcher => :equals) { topic.validate!(:key1 => "value") }
+      asserts_validation_error(:key => :key2, :matcher => :is_a) { topic.validate!(:key1 => "key") }
+      asserts_validation_error(:key => :key2, :matcher => :is_a) { topic.validate!(:key1 => "key", :key2 => {}) }
+      asserts_validation_error(:key => :key2, :matcher => :is_a) { topic.validate!(:key1 => "key", :key2 => {:key3 => 0.0}) }
+      asserts("passes") { topic.validate(:key1 => "key", :key2 => {:key3 => 23}) }
+    end
   end
 end
