@@ -51,7 +51,7 @@ class Valuedate
     valid? do |value|
       value ||= {}
       schema.all? do |(key, validator)|
-        validator.call(value[key]) || collect_errors!(validator, :key => key)
+        validator.call(value[key]) || collect_errors!(validator, key)
       end
     end
   end
@@ -74,10 +74,10 @@ class Valuedate
     self
   end
 
-  def collect_errors!(validator, options = {})
+  def collect_errors!(validator, key=nil)
     case validator
     when Valuedate
-      @errors.concat(validator.errors.map { |error| error.options.update(options); error })
+      @errors.concat(validator.errors.map { |error| error.options[:key] ||= key; error })
     end
     false
   end

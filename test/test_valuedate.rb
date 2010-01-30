@@ -196,6 +196,7 @@ context "Valuedate" do
     asserts("invalid array size") { !v([1,2]) { value.not { |value| value.size == 2 } } }
   end
 
+  # TODO refactor!
   context "errors" do
     setup do
       Valuedate.schema {}
@@ -220,12 +221,7 @@ context "Valuedate" do
       end
 
       asserts("fails") { !topic.validate({}) }
-      asserts_validation_error(:key => :key1, :matcher => :is_a) { topic.validate!({}) }
-      asserts_validation_error(:key => :key1, :matcher => :is_a) { topic.validate!(:key1 => 23) }
-      asserts_validation_error(:key => :key1, :matcher => :equals) { topic.validate!(:key1 => "value") }
-      asserts_validation_error(:key => :key2, :matcher => :is_a) { topic.validate!(:key1 => "key") }
-      asserts_validation_error(:key => :key2, :matcher => :is_a) { topic.validate!(:key1 => "key", :key2 => {}) }
-      asserts_validation_error(:key => :key2, :matcher => :is_a) { topic.validate!(:key1 => "key", :key2 => {:key3 => 0.0}) }
+      asserts_validation_error(:key => :key3, :matcher => :is_a) { topic.validate!(:key1 => "key", :key2 => {:key3 => 0.0}) }
       asserts("passes") { topic.validate(:key1 => "key", :key2 => {:key3 => 23}) }
     end
   end
