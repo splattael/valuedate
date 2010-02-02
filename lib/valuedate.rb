@@ -31,7 +31,7 @@ class Valuedate
   end
 
   class OptionalValue < Valuedate
-    def validate(value = nil)
+    def call(value = nil)
       value.nil? || super
     end
   end
@@ -56,18 +56,16 @@ class Valuedate
     end
   end
 
-  def validate(value = nil)
+  def call(value = nil)
     @errors.clear
     @validators.all? { |validator| validator.call(value) || collect_errors!(validator) }
   end
+  alias :validate :call
 
-  def validate!(value = nil)
-    validate(value) or raise ValidationFailed.new(@errors)
+  def call!(value = nil)
+    call(value) or raise ValidationFailed.new(@errors)
   end
-
-  def call(value)
-    validate(value)
-  end
+  alias :validate! :call!
 
   def valid?(&block)
     @validators << block
@@ -106,7 +104,11 @@ class Valuedate
     attr_reader :matchers
 
     def validate(value, &block)
-      schema(&block).validate(value)
+      schema(&block).call(value)
+    end
+
+    def validate!(value, &block)
+      schema(&block).call!(value)
     end
 
     def schema(&block)
@@ -124,7 +126,7 @@ end
 Valuedate.matcher(:equals) { |value, expected| value == expected }
 Valuedate.matcher(:is_a) { |value, expected| value.is_a?(expected) }
 Valuedate.matcher(:any) do |value, *validators|
-  validators.any? { |validator| validator.validate(value) }
+  validators.any? { |validator| validator.call(value) }
 end
 Valuedate.matcher(:in) { |value, expected| expected.include?(value) }
 Valuedate.matcher(:is) { |*value, &block| block.call(*value)  }
