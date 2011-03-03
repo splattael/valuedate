@@ -24,7 +24,7 @@ end
 
 context "Valuedate" do
 
-  asserts(:class) { Valuedate.schema }.equals(Valuedate)
+  asserts(:class) { Valuedate.schema }.kind_of(Valuedate)
 
   context "empty" do
     asserts("valid without block") { v }
